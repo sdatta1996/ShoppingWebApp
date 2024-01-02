@@ -1,1 +1,40 @@
-Azure repos practice
+# Replace these variables with your actual API endpoint and authentication details
+$apiEndpoint = "https://api.example.com/shopping"
+$apiKey = "your_api_key"
+
+# Function to make a GET request to retrieve products
+function Get-Products {
+    $url = "$apiEndpoint/products"
+    $headers = @{
+        'Authorization' = "Bearer $apiKey"
+    }
+
+    $response = Invoke-RestMethod -Uri $url -Headers $headers -Method Get
+    return $response
+}
+
+# Function to make a POST request to add a product to the shopping cart
+function Add-ToCart($productId, $quantity) {
+    $url = "$apiEndpoint/cart"
+    $headers = @{
+        'Authorization' = "Bearer $apiKey"
+    }
+
+    $body = @{
+        'productId' = $productId
+        'quantity'  = $quantity
+    }
+
+    $response = Invoke-RestMethod -Uri $url -Headers $headers -Method Post -Body ($body | ConvertTo-Json) -ContentType 'application/json'
+    return $response
+}
+
+# Example: Get a list of products
+$products = Get-Products
+$products
+
+# Example: Add a product to the shopping cart
+$productId = 123
+$quantity = 2
+$addToCartResponse = Add-ToCart -productId $productId -quantity $quantity
+$addToCartResponse
